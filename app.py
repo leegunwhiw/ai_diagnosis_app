@@ -74,10 +74,14 @@ if client and check_password():
                     
                     st.subheader("🤖 AI 어시스턴트 분석 결과")
 
-                    # [버그 수정] AI의 답변을 한 번만 가져와서 처리하고, 한 번만 출력합니다.
                     raw_response = response.choices[0].message.content
-                    cleaned_response = re.sub(r'\[\d+\]', '', raw_response)
-                    st.markdown(cleaned_response)
+                    # 1. 출처 표시([1], [2] 등)를 제거합니다.
+                    citation_free_response = re.sub(r'\[\d+\]', '', raw_response)
+                    # 2. [버그 수정] '$' 문자를 Streamlit이 인식하지 못하도록 '\$'로 변경합니다.
+                    final_response = citation_free_response.replace('$', '\\$')
+                    
+                    st.markdown(final_response)
+
 
                 except Exception as e:
                     st.error(f"API 호출 중 오류가 발생했습니다: {e}")
