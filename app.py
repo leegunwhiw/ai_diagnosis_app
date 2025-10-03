@@ -61,7 +61,7 @@ if client and check_password():
         if not final_symptom_text.strip() or (symptom_category != "기타 (직접 입력)" and not symptom_detail.strip()):
             st.warning("증상 카테고리를 선택하고, 상세 설명을 반드시 입력해주세요.")
         else:
-            MODEL_NAME = "sonar" # 빠르고 저렴한 모델 사용
+            MODEL_NAME = "sonar-pro" # 빠르고 저렴한 모델 사용
             with st.spinner(f"`{MODEL_NAME}` 모델이 사용자 정보를 분석하고 있습니다..."):
                 try:
                     user_profile = f"나이: {age}, 성별: {gender_display}, 추가 정보: {history if history else '없음'}"
