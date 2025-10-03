@@ -2,6 +2,7 @@ import streamlit as st
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+import re
 
 # .env 파일에서 API 키를 불러와 환경변수에 설정
 load_dotenv()
