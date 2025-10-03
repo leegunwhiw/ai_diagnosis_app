@@ -6,6 +6,24 @@ from dotenv import load_dotenv
 # .env 파일에서 API 키를 불러와 환경변수에 설정
 load_dotenv()
 
+# --- 비밀번호 확인 함수 ---
+def check_password():
+    """비밀번호가 맞으면 True, 틀리면 False를 반환합니다."""
+    # 앱의 메인 화면에 비밀번호 입력창을 만듭니다.
+    password = st.text_input("비밀번호를 입력하세요", type="password")
+
+    # st.secrets에서 설정한 비밀번호와 사용자가 입력한 비밀번호를 비교합니다.
+    # .env 파일에도 PASSWORD="1234"를 추가해두면 로컬에서도 테스트할 수 있습니다.
+    correct_password = os.environ.get("PASSWORD") or st.secrets.get("PASSWORD")
+
+    # 비밀번호가 맞으면 True를 반환하고, 틀리면 경고 메시지를 보여줍니다.
+    if password == correct_password:
+        return True
+    elif password: # 무언가 입력했는데 틀렸을 경우
+        st.warning("비밀번호가 틀렸습니다.")
+    
+    return False
+
 # --- Perplexity API 클라이언트 설정 ---
 try:
     # .env 파일에서 API 키를 확실하게 가져옵니다.
@@ -25,7 +43,7 @@ except Exception as e:
 st.set_page_config(page_title="AI 증상 진단기", page_icon="🩺")
 st.title("🩺 AI 증상 진단 프로토타입")
 
-if client:
+if client and check_password():
     st.info("AI 어시스턴트에게 증상을 설명해주세요. 예상 질병과 대응 방법을 알려드립니다.")
     
     # st.form을 사용하여 모든 입력을 한 번에 받음
