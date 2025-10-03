@@ -39,14 +39,12 @@ except Exception as e:
     st.error(f"API 클라이언트 설정 중 오류가 발생했습니다: {e}")
     client = None
 
-# --- Streamlit UI 구성 ---
 st.set_page_config(page_title="AI 증상 진단기", page_icon="🩺")
 st.title("🩺 AI 증상 진단 프로토타입")
 
 if client and check_password():
     st.info("AI 어시스턴트에게 증상을 설명해주세요. 예상 질병과 대응 방법을 알려드립니다.")
     
-    # st.form을 사용하여 모든 입력을 한 번에 받음
     with st.form("diagnosis_form"):
         st.subheader("1. 환자 정보")
         cols = st.columns(2)
@@ -55,7 +53,7 @@ if client and check_password():
         history = st.text_area("과거 병력, 복용 약, 알레르기 등 (선택 사항)")
 
         st.subheader("2. 주요 증상")
-        # 주요 증상 카테고리 선택
+        
         symptom_category = st.radio(
             "가장 불편한 증상의 종류를 선택하세요.",
             ["호흡기 증상 (기침, 콧물, 인후통 등)", 
@@ -66,7 +64,7 @@ if client and check_password():
             key="symptom_cat"
         )
         
-        # 상세 설명 입력창 (고정된 예시 사용)
+        
         symptom_detail = st.text_area(
             "증상을 더 자세히 설명해주세요.", 
             placeholder="예: 이틀 전부터 마른기침이 나고, 오늘 아침부터는 목이 칼칼하게 아픕니다.",
@@ -104,6 +102,14 @@ if client and check_password():
                     st.subheader("🤖 AI 어시스턴트 분석 결과")
                     # [최종 수정] st.markdown을 사용하여 가독성 좋게 결과 표시
                     st.markdown(response.choices[0].message.content)
+
+                    # 2 AI의 답변에서 출처 표시([1], [2] 등)를 제거합니다.
+                    raw_response = response.choices[0].message.content
+                    cleaned_response = re.sub(r'\[\d+\]', '', raw_response)
+                    
+                    # 3. 깨끗해진 최종 결과물을 화면에 보여줍니다.
+                    st.markdown(cleaned_response)
+
 
                 except Exception as e:
                     st.error(f"API 호출 중 오류가 발생했습니다: {e}")
